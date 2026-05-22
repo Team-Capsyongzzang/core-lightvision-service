@@ -65,7 +65,7 @@ Agreed API contract:
 
 ```text
 Method: POST
-Endpoint: http://heavy-model-service/jobs
+Endpoint: http://vision-service:8000/jobs
 Auth: none
 Success response: 200 OK
 ```
@@ -90,7 +90,7 @@ Dry run:
 ```bash
 python3 api_producer.py \
   --input /path/to/jobs.csv \
-  --api-url http://heavy-model-service/jobs \
+  --api-url http://vision-service:8000/jobs \
   --device cpu \
   --dry-run
 ```
@@ -100,7 +100,7 @@ Submit to the REST API:
 ```bash
 python3 api_producer.py \
   --input /path/to/jobs.csv \
-  --api-url http://heavy-model-service/jobs \
+  --api-url http://vision-service:8000/jobs \
   --device cpu
 ```
 
@@ -125,7 +125,7 @@ submit prioritized metadata:
 python3 s3_batch_producer.py \
   --bucket your-bucket-name \
   --prefix selected-images/ \
-  --api-url http://heavy-model-service/jobs \
+  --api-url http://vision-service:8000/jobs \
   --device cpu
 ```
 
@@ -135,7 +135,7 @@ Dry run:
 python3 s3_batch_producer.py \
   --bucket your-bucket-name \
   --prefix selected-images/ \
-  --api-url http://heavy-model-service/jobs \
+  --api-url http://vision-service:8000/jobs \
   --device cpu \
   --dry-run
 ```
