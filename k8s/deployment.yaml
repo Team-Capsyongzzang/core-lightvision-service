@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lightvision-service
+  namespace: disaster-monitor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lightvision-service
+  template:
+    metadata:
+      labels:
+        app: lightvision-service
+    spec:
+      serviceAccountName: lightvision-sa
+      containers:
+        - name: lightvision
+          image: 264935030068.dkr.ecr.ap-northeast-2.amazonaws.com/my-mlops-prod-lightvision-service:latest
+          command: ["python", "main.py"]
+          env:
+            - name: SQS_QUEUE_URL
+              value: https://sqs.ap-northeast-2.amazonaws.com/264935030068/my-mlops-prod-lightvision
+            - name: VISION_API_URL
+              value: http://vision-service:8000/jobs
+            - name: AWS_REGION
+              value: ap-northeast-2
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "1Gi"
+            limits:
+              cpu: "1"
+              memory: "2Gi"
