@@ -1,0 +1,45 @@
+name: build-and-deploy
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "**.py"
+      - "Dockerfile"
+      - "requirements.txt"
+
+permissions:
+  contents: write
+
+env:
+  AWS_DEFAULT_REGION: ap-northeast-2
+  ECR_REPOSITORY_URL: ${{ vars.ECR_REPOSITORY_URL }}
+  IMAGE_TAG: lightvision-service-${{ github.sha }}
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_DEFAULT_REGION }}
+
+      - uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build and push image
+        run: |
+          docker build -t $ECR_REPOSITORY_URL:$IMAGE_TAG .
+          docker push $ECR_REPOSITORY_URL:$IMAGE_TAG
+
+      - name: Update deployment manifest
+        run: |
+          sed -i "s|^\(\s*image:\s*\).*my-mlops-prod-lightvision-service:.*|\1$ECR_REPOSITORY_URL:$IMAGE_TAG|" k8s/deployment.yaml
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add k8s/deployment.yaml
+          git diff --cached --quiet || git commit -m "ci: update lightvision-service image to $IMAGE_TAG [skip ci]"
+          git push

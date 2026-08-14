@@ -16,7 +16,7 @@ spec:
       serviceAccountName: lightvision-sa
       containers:
         - name: lightvision
-          image: 264935030068.dkr.ecr.ap-northeast-2.amazonaws.com/my-mlops-prod-lightvision-service:latest
+          image: 264935030068.dkr.ecr.ap-northeast-2.amazonaws.com/my-mlops-prod-lightvision-service:lightvision-service-5ffaf344a8955ecbd20378b6468deaeb95de6959
           command: ["python", "main.py"]
           env:
             - name: SQS_QUEUE_URL
