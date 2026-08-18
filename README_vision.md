@@ -153,7 +153,7 @@ DEVICE=cuda
 GitHub 리포    : https://github.com/KWNahyun/core-vision-service
 ECR 이미지명   : core-vision-service
 포트           : 8000
-GPU 필요       : nvidia.com/gpu: 1 (p3.xlarge)
+GPU 필요       : nvidia.com/gpu: 1 (g4dn.xlarge)
 EBS PVC        : /model/ (initContainer가 S3에서 pth 다운로드)
 S3 모델 경로   : s3://my-mlops-prod-models/models/model.tar.gz
 환경변수       : .env.example 참고
